@@ -20,7 +20,7 @@ const form = document.querySelector("form"),
 
     eyeIcons.forEach((eyeIcon) => {
         eyeIcon.addEventListener("click", () => {
-            const pInput = eyeIcon.parentElement.querySelector("input")
+            const pInput = eyeIcon.parentElement.querySelector("input")//gettin parent element of eye icon and selecting the password input
             if(pInput.type === "password"){ 
             eyeIcon.classList.replace("bx-hide", "bx-show")
             return pInput.type ="text"
@@ -30,11 +30,41 @@ const form = document.querySelector("form"),
         })
     })
 
+    // Password Validation
+    function createPass(){
+        const passPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if(!passInput.value.match(passPattern)){
+           return passField.classList.add("invalid")//adding invalid class if  password input value do not match with passPattern
+        }
+            passField.classList.remove("invalid")//removing invalid class if  password input value matched with passPattern
+    }
+
+    //Confirm Password Invalidation
+    function confirmPass(){
+        if(passInput.value !== cPassInput.value || cPassInput.value === ""){
+            return cPassField.classList.add("invalid")
+        }
+            cPassField.classList.remove("invalid")
+    }
+
     // Calling Funtion on Form Submit
     form.addEventListener("submit", (e) =>{
         e.preventDefault();//Preventing form Submitting
         checkEmail()
+        createPass()
+        confirmPass()
 
         // calling function on key up
         emailInput.addEventListener("keyup", checkEmail)
+        passInput.addEventListener("keyup", createPass)
+        passInput.addEventListener("keyup", confirmPass)
+
+        if(
+            !emailField.classList.contains("invalid") && 
+            !passField.classList.contains("invalid") &&
+            !cPassField.classList.contains("invalid")
+            ){
+            location.href = form.getAttribute("action")
+        }
     })
